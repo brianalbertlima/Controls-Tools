@@ -87,7 +87,7 @@ for name in split_buildings:
             
             building = [] 
             #now that table names have been filtered only those will be queried for data in a selected time range
-            read_sql = "SELECT [TIMESTAMP],[VALUE] from [dbo].["+i+"] WHERE [TIMESTAMP] BETWEEN '%_" + start_date + "%' AND '%" + end_date + "%'"
+            read_sql = "SELECT [TIMESTAMP],[VALUE] from [dbo].["+i+"] WHERE [TIMESTAMP] BETWEEN "  + "'" + start_date +"'" + " AND " + "'"+end_date+"'"
             with cursor.execute(read_sql):
                 row = cursor.fetchone()
                 while row:
@@ -128,7 +128,7 @@ for name in split_buildings:
         final_dataframe.reindex_axis(sorted(final_dataframe.columns, key = lambda x: float(x[1:])), axis = 1)
         
         #exporting to CSV
-        final_dataframe.to_csv(buildings_input+'_'+meastype_input+'_DATA_'+start_date+'.csv') #changed this to start date for csv name
+        final_dataframe.to_csv(buildings_input+'_'+meastype_input+'_DATA_'+'.csv') #changed this to start date for csv name
     
 #%% Plot data with bokeh plotting (THIS WILL HAVE MANY ERRORS LOL)
     
@@ -146,7 +146,7 @@ for name in split_buildings:
         graph = figure(sizing_mode = 'stretch_both', x_axis_type = 'datetime')
     
         colors = color_gen()
-        tags = buildings_input # not sure what the header is called
+        tags = final_dataframe.columns # not sure what the header is called
         for tag in tags:
             color = next(colors)
             graph.circle(final_dataframe.index, final_dataframe[tag], size = 10, color = color, legend = tag) #index: x-axis coordinates tag: y-axis coordinates
@@ -154,6 +154,6 @@ for name in split_buildings:
         
         graph.legend.click_policy = 'hide'
         
-        output_file(buildings_input+'_'+meastype_input+'_DATA_'+start_date+'.html') 
+        output_file(buildings_input+'_'+meastype_input+'_DATA_'+'.html') 
     
         show(graph)
