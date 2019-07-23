@@ -57,7 +57,7 @@ end_date = input("Enter End Date (mm/dd/yyyy): ")
 frequency = input("Enter frequency (D(daily), H(hourly), #min(minute)): ") #provides example frequency inputs
 # if (frequency != "D") and (frequency != "H") and (frequency != "min"): #need a number tho
 #   print("Please enter a different frequency.")
-start_date = start_date.replace("/", " ") #take out '/' so it date can be saved in CSV file name
+#start_date = start_date.replace("/", " ") #take out '/' so it date can be saved in CSV file name
 
 #%% Collecting tables that meet the sql search criteria
 building_name = []
@@ -128,7 +128,7 @@ for name in split_buildings:
         final_dataframe.columns = sorted(final_dataframe.columns, key=lambda item: (int(item.partition(' ')[0]) if item[0].isdigit() else float('inf'), item))
         
         #exporting to CSV
-        start_date = start_date.replace('/', '')
+        start_date = start_date.replace('/', '_')
         
         final_dataframe.to_csv(buildings_input+'_'+meastype_input+'_DATA_'+start_date+'.csv') #changed this to start date for csv name
     
