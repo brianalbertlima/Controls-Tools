@@ -82,6 +82,7 @@ for name in split_buildings:
 #%% Data extraction
         timerange = pd.date_range(start = start_date, end = end_date, freq = frequency) #setting time range for data collection with data and frequency
         final_dataframe = pd.DataFrame() 
+        neveroff = pd.DataFrame(columns=['Room','Average','Standard Div'])
         for column in filtered_dataframe['table']: 
             
             building = [] 
@@ -111,6 +112,11 @@ for name in split_buildings:
                 #combining all tables queried into one dataframe with the datetime as column
                 final_dataframe = pd.concat([building,final_dataframe],axis=1)
                 print (column)
+                averagevalue = building.mean().iloc[0]
+                maxvalue = building.max().iloc[0]
+                stdiv = np.std([averagevalue,maxvalue])
+                if (averagevalue != 0) and (stdiv < .01):
+                    neveroff = neveroff.append({'Room':column, 'Average':averagevalue,'Standard Div':stdiv},ignore_index=True)
             except:
                 pass
                 
