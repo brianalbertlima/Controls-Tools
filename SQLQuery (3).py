@@ -129,6 +129,7 @@ for name in split_buildings:
         
         #exporting to CSV
         start_date = start_date.replace('/', '_')
+        start_date = start_date.replace(':', '_')
         
         final_dataframe.to_csv(buildings_input+'_'+meastype_input+'_DATA_'+start_date+'.csv') #changed this to start date for csv name
     
