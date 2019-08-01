@@ -10,8 +10,9 @@ import pyodbc
 import pandas as pd 
 
 from bokeh.plotting import figure, output_file, show
-from bokeh.palettes import Category10
+from bokeh.palettes import Category20
 import itertools
+import numpy as np
 
 #%% database connection
 server = 'cfo-sql1' #name of the sql server 
@@ -141,7 +142,7 @@ for name in split_buildings:
         
         # iterate through color palette
         def color_gen():
-            for c in itertools.cycle(Category10[10]):
+            for c in itertools.cycle(Category20[10]):
                 yield c
     
         #graph = figure(plot_width = plot_width, plot_height = plot_height, x_axis_type = 'datetime')
