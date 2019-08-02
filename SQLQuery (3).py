@@ -11,6 +11,7 @@ import pandas as pd
 
 from bokeh.plotting import figure, output_file, show
 from bokeh.palettes import Category20
+from bokeh.models import HoverTool
 import itertools
 import numpy as np
 
@@ -56,9 +57,6 @@ split_meastype = meastype_input.split(' ')
 start_date = input("Enter Start Date (mm/dd/yyyy): ") #provides required date format
 end_date = input("Enter End Date (mm/dd/yyyy): ")
 frequency = input("Enter frequency (D(daily), H(hourly), #min(minute)): ") #provides example frequency inputs
-# if (frequency != "D") and (frequency != "H") and (frequency != "min"): #need a number tho
-#   print("Please enter a different frequency.")
-#start_date = start_date.replace("/", " ") #take out '/' so it date can be saved in CSV file name
 
 #%% Collecting tables that meet the sql search criteria
 building_name = []
@@ -130,24 +128,28 @@ for name in split_buildings:
         
         #exporting to CSV
         start_date = start_date.replace('/', '_')
-        start_date = start_date.replace(':', '_')
         
         final_dataframe.to_csv(buildings_input+'_'+meastype_input+'_DATA_'+start_date+'.csv') #changed this to start date for csv name
     
-#%% Plot data with bokeh plotting 
+#%% Plot data with bokeh plotting  - try to make it plot faster
     
     plot_desired = input("Plot? 'Y' or 'N': ")
     
     if plot_desired == 'Y': # user keyboard input for if plot is wanted or not
-        
         # iterate through color palette
         def color_gen():
-            for c in itertools.cycle(Category20[10]):
+            for c in itertools.cycle(Category20[20]):
                 yield c
+        
+        TOOLTIPS = [('date', '('), (meastype, '($y)')]
+        
+        formatters = {'date' :'datetime'} 
     
-        #graph = figure(plot_width = plot_width, plot_height = plot_height, x_axis_type = 'datetime')
-        #auto width/height
-        graph = figure(sizing_mode = 'stretch_both', x_axis_type = 'datetime')
+        #get y-axis labeled but noooo
+        graph = figure(sizing_mode = 'stretch_both', x_axis_type = 'datetime', tooltips = TOOLTIPS, title = buildings_input+'_'+meastype_input+'_DATA_'+start_date)
+        graph.xaxis.axis_label = 'Date'
+        graph.yaxis.axis_label = meastype
+        
     
         colors = color_gen()
         tags = final_dataframe.columns 
@@ -155,6 +157,8 @@ for name in split_buildings:
             color = next(colors)
             graph.circle(final_dataframe.index, final_dataframe[tag], size = 10, color = color, legend = tag) #index: x-axis coordinates tag: y-axis coordinates
             graph.line(final_dataframe.index, final_dataframe[tag], color = color, legend = tag)
+        
+        #HoverTool(tooltips = [("index", "$index"), ("date", "datetime"), ("(x,y)", "($x, $y)")])
         
         graph.legend.click_policy = 'hide'
         
