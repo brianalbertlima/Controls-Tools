@@ -3,6 +3,9 @@
 Created on Mon Mar 11 14:49:30 2019
 
 @author: balima
+
+Modifications to code made by Michelle Acoba
+
 """
 
 #%% Import of libraries needed for sql search, dataframe use, bokeh plotting
